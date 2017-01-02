@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title></title>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=75RBiGQ2EO7jq6elirL9dUkm"></script>
+    <script type="text/javascript">
+        $(function ()
+        {
+            showMap();
+            
+        });
+/*
+        var chartData = [];
+        function showMap() {
+            var startSce = $("#<%=tb_Start.ClientID%>").val();
+            var EndSce = $("#<%=tb_End.ClientID%>").val();
+            var viaArray = $("#<%=tb_via.ClientID%>").val();
+
+            $.ajax({
+                type: "get",
+                data: { startSce: startSce, viaArray: viaArray, EndSce: EndSce },
+                datatype: "json",
+                url: "Handler1.ashx",
+                async: false,
+                success: function (userInfo) {
+                    var abc = $.parseJSON(userInfo);
+                    $.each(abc, function (item, value) {
+                        chartData.push(new BMap.Point(value.lan, value.yan));
+                    })
+                    for (var i = 0; i < chartData.length-1; i++) {
+                        var startPoint = chartData[i];
+                        var endPoint = chartData[i + 1];
+                        showPath(startPoint, endPoint);
+                    }
+
+                    $.each(abc, function (item, value) {
+                        var firstPoint = new BMap.Point(value.lan, value.yan);
+                        var m1 = new BMap.Marker(firstPoint);
+                        maps.addOverlay(m1);
+                        var lab1 = new BMap.Label(item+1, { position: firstPoint });
+                        maps.addOverlay(lab1);
+                    });
+
+                }
+            });
+        }
+*/
+        function showMap() {
+            busStops = [{name:"孙村",position:new BMap.Point(117.352096,38.345288)},{name:"孙村4站",position:new BMap.Point(117.351826,38.349398)},{name:"华建公司",position:new BMap.Point(117.345934,38.3507)},{name:"浅海大厦",position:new BMap.Point(117.341514,38.351662)},{name:"鼎信装饰城",position:new BMap.Point(117.342421, 38.353791)},{name:"博爱医院",position:new BMap.Point(117.34331,38.356982)},{name:"模具城",position:new BMap.Point(117.344685, 38.360271)},{name:"汽车站",position:new BMap.Point(117.346796,38.366234)},{name:"民生银行",position:new BMap.Point(117.347946,38.369883)},{name:"水务局",position:new BMap.Point(117.355644,38.372157)},{name:"不夜灯饰城",position:new BMap.Point(117.356165,38.373699)},{name:"信誉楼",position:new BMap.Point(117.355581,38.376025)},{name:"耀华商厦",position:new BMap.Point(117.355006,38.378507)},{name:"工商局",position:new BMap.Point(117.354602,38.38041)},{name:"康欣园",position:new BMap.Point(117.353551,38.38298)},{name:"关帝庙",position:new BMap.Point(117.360064, 38.384528)},{name:"蓉苑小区",position:new BMap.Point(117.36606,38.384857)},{name:"东十街南",position:new BMap.Point(117.366532, 38.382209)},{name:"金都雅居",position:new BMap.Point(117.367098,38.376557)},{name:"人民医院",position:new BMap.Point(117.370547,38.376559)},{name:"安定医院",position:new BMap.Point(117.380923,38.377028)},{name:"钢材市场",position:new BMap.Point(117.382854,38.371991)},{name:"通达技校",position:new BMap.Point(117.387848,38.365816)},{name:"地方铁路管理站",position:new BMap.Point(117.395026, 38.361431)},{name:"后苗新区",position:new BMap.Point(117.395322,38.35834)},{name:"后苗村",position:new BMap.Point(117.396319, 38.35447)},{name:"前苗村",position:new BMap.Point(117.396814,38.350502)}];
+
+                for (var i = 0; i < busStops.length-1; i++) {
+                        var startPoint = busStops[i].position;
+                        var endPoint = busStops[i + 1].position;
+                        showPath(startPoint, endPoint);
+                    }
+                    markStop(busStops);
+
+        }
+        function markStop(busStops) {
+            $.each(busStops, function (key, value) {
+                        var firstPoint = value.position;
+                        var marker = new BMap.Marker(firstPoint);
+                        maps.addOverlay(marker);
+                        var label = new BMap.Label(value.name ,{offset:new BMap.Size(20,-10)});
+                        //var label = new BMap.Label("我是文字标注哦",{offset:new BMap.Size(20,-10)});
+                        marker.setLabel(label);
+                        //maps.addOverlay(lab);
+                    });
+        }
+
+        function showPath(startPoint, EndPoint)
+        {
+            var path = new BMap.WalkingRoute(map, { renderOptions: { map: map, autoViewport: true } });
+            path.search(startPoint, EndPoint);
+
+            path.setSearchCompleteCallback(function (rs) {
+                var abc = rs;
+                var pts = path.getResults().getPlan(0).getRoute(0).getPath();
+                maps.addOverlay(new BMap.Polyline(pts, { strokeColor: "green", strokeWeight: 2, strokeOpacity: 1 }));
+            });
+        }
+    </script>
+</head>
+<body>
+
+  <div id="r-result" style=" height:700px; width:1500px">
+  </div>
+    <div id="allmap" style=" height:0px; width:0px">
+        
+    </div>
+    <br />
+    <br />
+    
+    
+</body>
+</html>
+
+<script type="text/javascript">
+
+    var map = new BMap.Map("allmap");
+    map.centerAndZoom(new BMap.Point(117.3366,38.377386),14);
+
+    var maps = new BMap.Map("r-result");
+    maps.centerAndZoom(new BMap.Point(117.3366,38.377386),15);
+    
+    function showInfo(e){
+        alert(e.point.lng + ", " + e.point.lat);
+    }
+    maps.addEventListener("click", showInfo);
+
+    add_control(maps);
+
+    function add_control(map) {
+        var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+        var top_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL}); //右上角，仅包含平移和缩放按钮
+   /*缩放控件type有四种类型:
+    BMAP_NAVIGATION_CONTROL_SMALL：仅包含平移和缩放按钮；BMAP_NAVIGATION_CONTROL_PAN:仅包含平移按钮；BMAP_NAVIGATION_CONTROL_ZOOM：仅包含缩放按钮*/
+        map.addControl(top_left_control);        
+        map.addControl(top_left_navigation);     
+        map.addControl(top_right_navigation);  
+    }
+</script>
