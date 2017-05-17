@@ -60,14 +60,14 @@
         }
         function markStop(busStops) {
             $.each(busStops, function (key, value) {
-                        var firstPoint = value.position;
-                        var marker = new BMap.Marker(firstPoint);
-                        maps.addOverlay(marker);
-                        var label = new BMap.Label(value.name ,{offset:new BMap.Size(20,-10)});
-                        //var label = new BMap.Label("我是文字标注哦",{offset:new BMap.Size(20,-10)});
-                        marker.setLabel(label);
-                        //maps.addOverlay(lab);
-                    });
+                var firstPoint = value.position;
+                var marker = new BMap.Marker(firstPoint);
+                maps.addOverlay(marker);
+                var label = new BMap.Label(value.name ,{offset:new BMap.Size(20,-10)});
+                //var label = new BMap.Label("我是文字标注哦",{offset:new BMap.Size(20,-10)});
+                marker.setLabel(label);
+                //maps.addOverlay(lab);
+            });
         }
 
         function showPath(startPoint, EndPoint)
